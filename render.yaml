@@ -4,8 +4,8 @@ services:
     name: furni-backend
     env: node
     plan: free
-    buildCommand: npm run build:backend
-    startCommand: npm start
+    buildCommand: cd server && npm install
+    startCommand: cd server && npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -30,7 +30,7 @@ services:
   - type: web
     name: furni-frontend
     env: static
-    buildCommand: npm run build:frontend
+    buildCommand: chmod +x build.sh && ./build.sh
     staticPublishPath: ./furni-store/dist
     envVars:
       - key: VITE_API_URL
