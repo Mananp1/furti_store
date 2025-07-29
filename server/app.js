@@ -72,6 +72,11 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+app.use(express.static(path.join(__dirname, "../furni-store/dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../furni-store/dist/index.html"));
+});
+
 // 404 handler
 app.use("*", (req, res) => {
   console.log("❌ Route not found:", {
@@ -92,9 +97,4 @@ app.use((err, req, res, next) => {
     error: "Internal server error",
     message: err.message,
   });
-});
-
-app.use(express.static(path.join(__dirname, "../furni-store/dist")));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../furni-store/dist/index.html"));
 });
