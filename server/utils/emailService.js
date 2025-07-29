@@ -4,23 +4,28 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const createTransporter = () => {
-  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
-    console.log("⚠️ Email credentials not found, using console fallback");
-    return null;
+  if (process.env.NODE_ENV === "production") {
+    return nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASSWORD,
+      },
+    });
+  } else {
+    if (process.env.EMAIL_USER_GMAIL && process.env.EMAIL_PASSWORD_GMAIL) {
+      return nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER_GMAIL,
+          pass: process.env.EMAIL_PASSWORD_GMAIL,
+        },
+      });
+    } else {
+      return null;
+    }
   }
-
-  return nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || "live.smtp.mailtrap.io",
-    port: Number(process.env.EMAIL_PORT) || 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-    tls: {
-      rejectUnauthorized: false,
-    },
-  });
 };
 
 export const sendMagicLinkEmail = async ({ email, url, token }) => {
@@ -31,10 +36,8 @@ export const sendMagicLinkEmail = async ({ email, url, token }) => {
   }
 
   const mailOptions = {
-    from: `"Furni Store" <${
-      process.env.EMAIL_USER || "noreply@furnishly.online"
-    }>`,
-    to: email,
+    from: process.env.EMAIL_USER_GMAIL,
+    to: email,  
     subject: "Sign in to Furni Store",
     html: `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: auto; background: #f9f9f9; padding: 40px 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
@@ -90,16 +93,14 @@ export const sendContactEmail = async ({
   contactId,
 }) => {
   const transporter = createTransporter();
-  const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER;
+  const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER_GMAIL;
 
   if (!transporter) {
     return { success: true };
   }
 
   const mailOptions = {
-    from: `"Furni Store Contact" <${
-      process.env.EMAIL_USER || "noreply@furnishly.online"
-    }>`,
+    from: process.env.EMAIL_USER_GMAIL,
     to: adminEmail,
     subject: `New Contact Form Submission from ${firstName} ${lastName}`,
     html: `
@@ -155,9 +156,7 @@ export const sendAutoReplyEmail = async ({ firstName, lastName, email }) => {
   }
 
   const mailOptions = {
-    from: `"Furni Store Support" <${
-      process.env.EMAIL_USER || "noreply@furnishly.online"
-    }>`,
+    from: process.env.EMAIL_USER_GMAIL,
     to: email,
     subject: "Thank you for contacting Furni Store",
     html: `
