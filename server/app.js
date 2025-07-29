@@ -1,6 +1,8 @@
 // src/app.js
 import express from "express";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./auth.js";
 import productRoutes from "./routes/product.routes.js";
@@ -12,7 +14,7 @@ import contactRoutes from "./routes/contact.routes.js";
 import { getConnectionStatus } from "./utils/db.js";
 import { handleStripeWebhook } from "./controllers/payment.controller.js";
 
-
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const app = express();
 
 // CORS configuration
@@ -28,15 +30,15 @@ app.use(
   })
 );
 
-// Better Auth routes (must be before JSON parsing)
-app.all("/api/auth/*", toNodeHandler(auth));
-
 // Stripe webhook route (must be raw body - no JSON parsing)
 app.post(
   "/api/payments/webhook",
   express.raw({ type: "application/json" }),
   handleStripeWebhook
 );
+
+// Better Auth routes (must be before JSON parsing)
+app.all("/api/auth/*", toNodeHandler(auth));
 
 app.use(express.json());
 
@@ -90,4 +92,9 @@ app.use((err, req, res, next) => {
     error: "Internal server error",
     message: err.message,
   });
+});
+
+app.use(express.static(path.join(__dirname, "../furni-store/dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../furni-store/dist/index.html"));
 });

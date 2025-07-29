@@ -1,12 +1,8 @@
 {
   "name": "furni-store-monorepo",
-  "description": "FurniStore - E-commerce platform with React frontend and Node.js backend",
   "scripts": {
     "build": "cd furni-store && npm install && npm run build",
-    "build:frontend": "cd furni-store && npm install && npm run build",
-    "build:backend": "cd server && npm install",
-    "start": "cd server && npm install && node server.js",
-    "dev": "concurrently \"cd furni-store && npm run dev\" \"cd server && npm run dev\""
+    "start": "cd server && npm install && node server.js"
   },
   "engines": {
     "node": ">=18.0.0"
