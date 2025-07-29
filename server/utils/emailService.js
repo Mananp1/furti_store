@@ -4,40 +4,35 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const createTransporter = () => {
-  if (process.env.NODE_ENV === "production") {
-    return nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-  } else {
-    if (process.env.EMAIL_USER_GMAIL && process.env.EMAIL_PASSWORD_GMAIL) {
-      return nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.EMAIL_USER_GMAIL,
-          pass: process.env.EMAIL_PASSWORD_GMAIL,
-        },
-      });
-    } else {
-      return null;
-    }
+  if (!process.env.EMAIL_USER_GMAIL || !process.env.EMAIL_PASSWORD_GMAIL) {
+    console.log("⚠️ Gmail email credentials not found, using console fallback");
+    return null;
   }
+
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER_GMAIL,
+      pass: process.env.EMAIL_PASSWORD_GMAIL,
+    },
+  });
 };
 
 export const sendMagicLinkEmail = async ({ email, url, token }) => {
   const transporter = createTransporter();
 
   if (!transporter) {
+    console.log("📧 Magic Link Email (would be sent to):", email);
+    console.log("Subject: Sign in to Furni Store");
+    console.log(
+      "💡 To enable real email sending, add EMAIL_USER_GMAIL and EMAIL_PASSWORD_GMAIL to your .env file"
+    );
     return { success: true };
   }
 
   const mailOptions = {
-    from: process.env.EMAIL_USER_GMAIL,
-    to: email,  
+    from: `"Furni Store" <${process.env.EMAIL_USER_GMAIL}>`,
+    to: email,
     subject: "Sign in to Furni Store",
     html: `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: auto; background: #f9f9f9; padding: 40px 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
@@ -77,6 +72,7 @@ export const sendMagicLinkEmail = async ({ email, url, token }) => {
 
   try {
     await transporter.sendMail(mailOptions);
+    console.log("✅ Magic link email sent to:", email);
     return { success: true };
   } catch (error) {
     console.error("❌ Error sending magic link email:", error);
@@ -96,11 +92,16 @@ export const sendContactEmail = async ({
   const adminEmail = process.env.ADMIN_EMAIL || process.env.EMAIL_USER_GMAIL;
 
   if (!transporter) {
+    console.log("📧 Contact Email (would be sent to admin):", adminEmail);
+    console.log("Subject: New Contact Form Submission");
+    console.log(
+      "💡 To enable real email sending, add EMAIL_USER_GMAIL and EMAIL_PASSWORD_GMAIL to your .env file"
+    );
     return { success: true };
   }
 
   const mailOptions = {
-    from: process.env.EMAIL_USER_GMAIL,
+    from: `"Furni Store Contact" <${process.env.EMAIL_USER_GMAIL}>`,
     to: adminEmail,
     subject: `New Contact Form Submission from ${firstName} ${lastName}`,
     html: `
@@ -136,6 +137,7 @@ export const sendContactEmail = async ({
 
   try {
     await transporter.sendMail(mailOptions);
+    console.log("✅ Contact notification email sent to admin:", adminEmail);
     return { success: true };
   } catch (error) {
     console.error("❌ Error sending contact notification email:", error);
@@ -150,13 +152,13 @@ export const sendAutoReplyEmail = async ({ firstName, lastName, email }) => {
     console.log("📧 Auto-Reply Email (would be sent to):", email);
     console.log("Subject: Thank you for contacting Furni Store");
     console.log(
-      "💡 To enable real email sending, add EMAIL_PASSWORD to your .env file"
+      "💡 To enable real email sending, add EMAIL_USER_GMAIL and EMAIL_PASSWORD_GMAIL to your .env file"
     );
     return { success: true };
   }
 
   const mailOptions = {
-    from: process.env.EMAIL_USER_GMAIL,
+    from: `"Furni Store Support" <${process.env.EMAIL_USER_GMAIL}>`,
     to: email,
     subject: "Thank you for contacting Furni Store",
     html: `

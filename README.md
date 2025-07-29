@@ -15,7 +15,7 @@ A full-stack e-commerce application built with React, Node.js, MongoDB, and Stri
 - npm 8+
 - MongoDB database
 - Stripe account
-- Mailtrap account (for email)
+- Gmail account with App Password (for email)
 
 ### Local Development
 
@@ -211,8 +211,8 @@ PATCH  /api/contact/:id/status       # Update contact status
   ```env
   MONGO_URI=your_mongodb_uri
   MONGO_DB_NAME=store_db
-  MAILTRAP_USER=your_mailtrap_user
-  MAILTRAP_PASS=your_mailtrap_pass
+  EMAIL_USER_GMAIL=your_email@gmail.com
+  EMAIL_PASSWORD_GMAIL=your_app_password
   STRIPE_SECRET_KEY=sk_test_...
   STRIPE_WEBHOOK_SECRET=whsec_...
   FRONTEND_URL=https://your-frontend-domain.com
@@ -314,8 +314,8 @@ VITE_STRIPE_PUBLISHABLE_KEY=pk_test_...
 ```env
 MONGO_URI=mongodb://localhost:27017
 MONGO_DB_NAME=store_db
-MAILTRAP_USER=your_mailtrap_user
-MAILTRAP_PASS=your_mailtrap_pass
+EMAIL_USER_GMAIL=your_email@gmail.com
+EMAIL_PASSWORD_GMAIL=your_app_password
 STRIPE_SECRET_KEY=sk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 FRONTEND_URL=https://your-frontend-domain.com
