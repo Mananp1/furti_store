@@ -1,8 +1,8 @@
 {
   "name": "furni-store-monorepo",
   "scripts": {
-    "build": "cd furni-store && npm install && npm run build && mkdir -p ../server/public && cp -r dist/* ../server/public",
-    "start": "cd server && npm install && node server.js"
+    "build": "cd server&& npm install",
+    "start": "cd server && node server.js"
   },
   "engines": {
     "node": ">=18.0.0"
