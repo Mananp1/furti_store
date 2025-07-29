@@ -4,16 +4,14 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const createTransporter = () => {
-  if (process.env.NODE_ENV === "production") {
-    return nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
-  } 
+  return nodemailer.createTransport({
+    host: process.env.EMAIL_HOST || "live.smtp.mailtrap.io",
+    port: Number(process.env.EMAIL_PORT) || 587,
+    auth: {
+      user: process.env.EMAIL_USER || "api",
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
 };
 
 export const sendMagicLinkEmail = async ({ email, url, token }) => {
