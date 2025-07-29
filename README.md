@@ -1,1 +1,0 @@
-# furti_store

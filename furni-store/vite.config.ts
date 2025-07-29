@@ -24,7 +24,61 @@ export default defineConfig({
         target: process.env.VITE_API_URL || "http://localhost:5001",
         changeOrigin: true,
         secure: process.env.NODE_ENV === "production",
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
+  },
+  build: {
+    outDir: "dist",
+    sourcemap: false,
+    chunkSizeWarningLimit: 1000,
+    minify: "esbuild",
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Vendor chunks
+          vendor: ["react", "react-dom"],
+          router: ["@tanstack/react-router"],
+          ui: [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-dropdown-menu",
+            "@radix-ui/react-slot",
+            "@radix-ui/react-tabs",
+          ],
+          icons: ["lucide-react"],
+          utils: ["clsx", "tailwind-merge", "class-variance-authority"],
+          // State management
+          redux: ["@reduxjs/toolkit", "react-redux"],
+          // Data fetching
+          query: ["@tanstack/react-query"],
+          // Forms
+          forms: ["react-hook-form", "@hookform/resolvers", "zod"],
+          // UI components
+          shadcn: [
+            "@/components/ui/button",
+            "@/components/ui/card",
+            "@/components/ui/input",
+          ],
+          // Features
+          cart: ["@/features/cart/cartSlice"],
+          user: ["@/features/user/userSlice"],
+          wishlist: ["@/features/wishlist/wishlistSlice"],
+        },
+      },
+    },
+  },
+  // Optimize dependencies
+  optimizeDeps: {
+    include: [
+      "react",
+      "react-dom",
+      "@tanstack/react-router",
+      "@tanstack/react-query",
+      "@reduxjs/toolkit",
+      "react-redux",
+      "react-hook-form",
+      "zod",
+      "lucide-react",
+    ],
   },
 });

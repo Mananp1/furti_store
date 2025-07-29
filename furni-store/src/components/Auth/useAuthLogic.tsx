@@ -8,7 +8,6 @@ type FormData = {
 
 export const useAuthLogic = (type: "login" | "signup") => {
   const [isLoading, setIsLoading] = useState(false);
-  
 
   const handleFormSubmit = async (data: FormData) => {
     setIsLoading(true);
@@ -21,11 +20,16 @@ export const useAuthLogic = (type: "login" | "signup") => {
     try {
       console.log("🔗 Calling signIn.magicLink...");
 
+      // Use environment variable or fallback to current origin
+      const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
+      const callbackURL = `${baseUrl}/`;
+      const errorCallbackURL = `${baseUrl}/login`;
+
       const result = await signIn.magicLink({
         email,
-        callbackURL: "http://localhost:5173/",
-        newUserCallbackURL: "http://localhost:5173/",
-        errorCallbackURL: "http://localhost:5173/login",
+        callbackURL,
+        newUserCallbackURL: callbackURL,
+        errorCallbackURL,
       });
 
       console.log("📧 Magic link result:", result);

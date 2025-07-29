@@ -6,7 +6,8 @@ dotenv.config();
 const createTransporter = () => {
   if (process.env.NODE_ENV === "production") {
     return nodemailer.createTransport({
-      service: "gmail",
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
@@ -17,8 +18,8 @@ const createTransporter = () => {
       return nodemailer.createTransport({
         service: "gmail",
         auth: {
-          user: process.env.EMAIL_USER,
-          pass: process.env.EMAIL_PASSWORD,
+          user: process.env.EMAIL_USER_GMAIL,
+          pass: process.env.EMAIL_PASSWORD_GMAIL,
         },
       });
     } else {
@@ -39,26 +40,38 @@ export const sendMagicLinkEmail = async ({ email, url, token }) => {
     to: email,
     subject: "Sign in to Furni Store",
     html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #333;">Welcome to Furni Store!</h2>
-        <p>Click the button below to sign in to your account:</p>
-        <div style="text-align: center; margin: 30px 0;">
-          <a href="${url}" 
-             style="background-color: #007bff; color: white; padding: 12px 24px; 
-                    text-decoration: none; border-radius: 5px; display: inline-block;">
-            Sign In to Furni Store
-          </a>
-        </div>
-        <p style="color: #666; font-size: 14px;">
-          This link will expire in 5 minutes. If you didn't request this email, 
-          you can safely ignore it.
-        </p>
-        <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
-        <p style="color: #999; font-size: 12px;">
-          If the button doesn't work, copy and paste this link into your browser:<br>
-          <a href="${url}" style="color: #007bff;">${url}</a>
-        </p>
-      </div>
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: auto; background: #f9f9f9; padding: 40px 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  <h2 style="color: #2c3e50; text-align: center; margin-bottom: 20px;">Welcome to <span style="color: #007bff;">Furnishly</span>!</h2>
+  
+  <p style="font-size: 16px; color: #444; text-align: center; line-height: 1.6;">
+    You're just one click away from accessing your account. Tap the button below to sign in securely.
+  </p>
+
+  <div style="text-align: center; margin: 30px 0;">
+    <a href="${url}" 
+       style="background: linear-gradient(90deg, #007bff 0%, #0056b3 100%); color: #fff; padding: 14px 32px; 
+              font-size: 16px; font-weight: bold; text-decoration: none; border-radius: 6px; 
+              box-shadow: 0 3px 8px rgba(0,123,255,0.3); transition: background 0.3s ease;">
+      Sign In to Furnishly
+    </a>
+  </div>
+
+  <p style="font-size: 14px; color: #666; text-align: center;">
+    This link will expire in 5 minutes. If you didn't request this email, feel free to ignore it.
+  </p>
+
+  <hr style="margin: 40px 0; border: none; border-top: 1px solid #e0e0e0;">
+
+  <p style="font-size: 13px; color: #999; word-break: break-word;">
+    If the button above doesn't work, copy and paste this URL into your browser:<br>
+    <a href="${url}" style="color: #007bff;">${url}</a>
+  </p>
+
+  <p style="font-size: 12px; color: #bbb; text-align: center; margin-top: 30px;">
+    &copy; 2025 Furni Store. All rights reserved.
+  </p>
+</div>
+
     `,
   };
 
@@ -91,29 +104,33 @@ export const sendContactEmail = async ({
     to: adminEmail,
     subject: `New Contact Form Submission from ${firstName} ${lastName}`,
     html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #333;">New Contact Form Submission</h2>
-        
-        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <h3 style="color: #495057; margin-top: 0;">Contact Details</h3>
-          <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-          <p><strong>Email:</strong> <a href="mailto:${email}" style="color: #007bff;">${email}</a></p>
-          <p><strong>User ID:</strong> ${userId || "Not logged in"}</p>
-          <p><strong>Contact ID:</strong> ${contactId}</p>
-          <p><strong>Submitted:</strong> ${new Date().toLocaleString()}</p>
-        </div>
-        
-        <div style="background-color: #fff; padding: 20px; border: 1px solid #dee2e6; border-radius: 8px;">
-          <h3 style="color: #495057; margin-top: 0;">Message</h3>
-          <p style="white-space: pre-wrap; line-height: 1.6;">${message}</p>
-        </div>
-        
-        <div style="margin-top: 30px; padding: 15px; background-color: #e9ecef; border-radius: 8px;">
-          <p style="margin: 0; color: #6c757d; font-size: 14px;">
-            This is an automated notification from your Furni Store contact form.
-          </p>
-        </div>
-      </div>
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background-color: #f4f6f9; padding: 30px; border-radius: 10px;">
+  
+  <h2 style="color: #2c3e50; text-align: center; margin-bottom: 25px;">📩 New Contact Form Submission</h2>
+  
+  <div style="background-color: #ffffff; padding: 24px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); margin-bottom: 20px;">
+    <h3 style="color: #007bff; margin-top: 0;">Contact Details</h3>
+    <p style="margin: 8px 0;"><strong>Name:</strong> ${firstName} ${lastName}</p>
+    <p style="margin: 8px 0;"><strong>Email:</strong> <a href="mailto:${email}" style="color: #007bff; text-decoration: none;">${email}</a></p>
+    <p style="margin: 8px 0;"><strong>User ID:</strong> ${
+      userId || "Not logged in"
+    }</p>
+    <p style="margin: 8px 0;"><strong>Contact ID:</strong> ${contactId}</p>
+    <p style="margin: 8px 0;"><strong>Submitted:</strong> ${new Date().toLocaleString()}</p>
+  </div>
+
+  <div style="background-color: #ffffff; padding: 24px; border: 1px solid #e1e5ea; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+    <h3 style="color: #007bff; margin-top: 0;">Message</h3>
+    <p style="white-space: pre-wrap; line-height: 1.6; color: #333;">${message}</p>
+  </div>
+
+  <div style="margin-top: 30px; padding: 15px; background-color: #f0f3f6; border-radius: 6px; text-align: center;">
+    <p style="margin: 0; color: #6c757d; font-size: 14px;">
+      This is an automated notification from your <strong>Furni Store</strong> contact form.
+    </p>
+  </div>
+</div>
+
     `,
   };
 
@@ -167,7 +184,7 @@ export const sendAutoReplyEmail = async ({ firstName, lastName, email }) => {
         </ul>
         
         <div style="text-align: center; margin: 30px 0;">
-          <a href="${process.env.FRONTEND_URL || "http://localhost:5174"}" 
+          <a href="${process.env.FRONTEND_URL || "http://localhost:5173"}" 
              style="background-color: #007bff; color: white; padding: 12px 24px; 
                     text-decoration: none; border-radius: 5px; display: inline-block;">
             Visit Furni Store

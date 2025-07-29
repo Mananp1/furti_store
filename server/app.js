@@ -37,7 +37,6 @@ app.post(
   handleStripeWebhook
 );
 
-// JSON parsing middleware (applied after webhook route)
 app.use(express.json());
 
 // API routes (with JSON parsing)
