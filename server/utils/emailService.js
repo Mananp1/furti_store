@@ -4,12 +4,21 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const createTransporter = () => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASSWORD) {
+    console.log("⚠️ Email credentials not found, using console fallback");
+    return null;
+  }
+
   return nodemailer.createTransport({
     host: process.env.EMAIL_HOST || "live.smtp.mailtrap.io",
     port: Number(process.env.EMAIL_PORT) || 587,
+    secure: false, // true for 465, false for other ports
     auth: {
-      user: process.env.EMAIL_USER || "api",
+      user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASSWORD,
+    },
+    tls: {
+      rejectUnauthorized: false,
     },
   });
 };
@@ -22,7 +31,9 @@ export const sendMagicLinkEmail = async ({ email, url, token }) => {
   }
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: `"Furni Store" <${
+      process.env.EMAIL_USER || "noreply@furnishly.online"
+    }>`,
     to: email,
     subject: "Sign in to Furni Store",
     html: `
@@ -86,7 +97,9 @@ export const sendContactEmail = async ({
   }
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: `"Furni Store Contact" <${
+      process.env.EMAIL_USER || "noreply@furnishly.online"
+    }>`,
     to: adminEmail,
     subject: `New Contact Form Submission from ${firstName} ${lastName}`,
     html: `
@@ -142,7 +155,9 @@ export const sendAutoReplyEmail = async ({ firstName, lastName, email }) => {
   }
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: `"Furni Store Support" <${
+      process.env.EMAIL_USER || "noreply@furnishly.online"
+    }>`,
     to: email,
     subject: "Thank you for contacting Furni Store",
     html: `
