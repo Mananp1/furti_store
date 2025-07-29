@@ -1,0 +1,43 @@
+services:
+  # Backend API Service
+  - type: web
+    name: furni-backend
+    env: node
+    plan: free
+    buildCommand: npm run build:backend
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        sync: false
+      - key: MONGO_DB_NAME
+        value: store_db
+      - key: MAILTRAP_USER
+        sync: false
+      - key: MAILTRAP_PASS
+        sync: false
+      - key: STRIPE_SECRET_KEY
+        sync: false
+      - key: STRIPE_WEBHOOK_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        value: https://furni-frontend.onrender.com
+      - key: ADMIN_EMAIL
+        value: admin@furnishly.online
+
+  # Frontend Static Site
+  - type: web
+    name: furni-frontend
+    env: static
+    buildCommand: npm run build:frontend
+    staticPublishPath: ./furni-store/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://furni-backend.onrender.com/api
+      - key: VITE_APP_URL
+        value: https://furni-frontend.onrender.com
+      - key: VITE_AUTH_URL
+        value: https://furni-backend.onrender.com
+      - key: VITE_STRIPE_PUBLISHABLE_KEY
+        sync: false
