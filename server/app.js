@@ -11,6 +11,9 @@ import paymentRoutes from "./routes/payment.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
 import { getConnectionStatus } from "./utils/db.js";
 import { handleStripeWebhook } from "./controllers/payment.controller.js";
+import path from "path";
+import { fileURLToPath } from "url";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export const app = express();
 
@@ -67,6 +70,13 @@ app.get("/api/health", (req, res) => {
       products: "running",
     },
   });
+});
+
+
+app.use(express.static(path.join(__dirname, "../furni-store/dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../furni-store/dist/index.html"));
 });
 
 // 404 handler
