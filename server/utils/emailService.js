@@ -13,19 +13,7 @@ const createTransporter = () => {
         pass: process.env.EMAIL_PASSWORD,
       },
     });
-  } else {
-    if (process.env.EMAIL_USER && process.env.EMAIL_PASSWORD) {
-      return nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: process.env.EMAIL_USER_GMAIL,
-          pass: process.env.EMAIL_PASSWORD_GMAIL,
-        },
-      });
-    } else {
-      return null;
-    }
-  }
+  } 
 };
 
 export const sendMagicLinkEmail = async ({ email, url, token }) => {
