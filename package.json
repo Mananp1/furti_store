@@ -1,0 +1,13 @@
+{
+  "name": "furni-store-monorepo",
+  "scripts": {
+    "build": "cd furni-store && npm install && npm run build",
+    "start": "cd server && npm install && node server.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
