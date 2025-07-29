@@ -50,11 +50,6 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/contact", contactRoutes);
 
-// Health check endpoint
-app.get("/", (req, res) => {
-  res.send("API is working");
-});
-
 app.get("/api/health", (req, res) => {
   const dbStatus = getConnectionStatus();
   res.json({
