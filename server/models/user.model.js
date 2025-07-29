@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-// Address sub-schema with India-specific validation
+
 const addressSchema = new mongoose.Schema(
   {
     street: {
@@ -64,10 +64,10 @@ const addressSchema = new mongoose.Schema(
   { _id: true }
 );
 
-// User profile schema
+
 const userProfileSchema = new mongoose.Schema(
   {
-    // Link to better-auth user
+
     authUserId: {
       type: String,
       required: [true, "Auth user ID is required"],
@@ -75,29 +75,27 @@ const userProfileSchema = new mongoose.Schema(
       index: true,
     },
 
-    // Personal Information (from better-auth)
+
     firstName: {
       type: String,
       trim: true,
-      minlength: [2, "First name must be at least 2 characters"],
       maxlength: [50, "First name cannot exceed 50 characters"],
       match: [
-        /^[a-zA-Z\s'-]+$/,
+        /^[a-zA-Z\s'-]*$/, 
         "First name can only contain letters, spaces, hyphens, and apostrophes",
       ],
     },
     lastName: {
       type: String,
       trim: true,
-      minlength: [2, "Last name must be at least 2 characters"],
       maxlength: [50, "Last name cannot exceed 50 characters"],
       match: [
-        /^[a-zA-Z\s'-]+$/,
+        /^[a-zA-Z\s'-]*$/, 
         "Last name can only contain letters, spaces, hyphens, and apostrophes",
       ],
     },
 
-    // Contact Information
+
     email: {
       type: String,
       lowercase: true,
@@ -108,13 +106,13 @@ const userProfileSchema = new mongoose.Schema(
       ],
     },
 
-    // Addresses
+
     addresses: {
       type: [addressSchema],
       default: [],
       validate: {
         validator: function (addresses) {
-          // Ensure only one default address
+
           const defaultAddresses = addresses.filter((addr) => addr.isDefault);
           return defaultAddresses.length <= 1;
         },
@@ -122,7 +120,7 @@ const userProfileSchema = new mongoose.Schema(
       },
     },
 
-    // Account Settings
+
     preferences: {
       emailNotifications: {
         type: Boolean,
@@ -138,13 +136,13 @@ const userProfileSchema = new mongoose.Schema(
       },
     },
 
-    // Account Status
+
     isActive: {
       type: Boolean,
       default: true,
     },
 
-    // Timestamps
+
     lastLogin: {
       type: Date,
       default: Date.now,
@@ -155,11 +153,11 @@ const userProfileSchema = new mongoose.Schema(
   }
 );
 
-// Indexes for better performance
+
 userProfileSchema.index({ email: 1 });
 userProfileSchema.index({ "addresses.isDefault": 1 });
 
-// Pre-save middleware to ensure only one default address
+
 userProfileSchema.pre("save", function (next) {
   if (this.addresses && this.addresses.length > 0) {
     const defaultAddresses = this.addresses.filter((addr) => addr.isDefault);
@@ -170,19 +168,19 @@ userProfileSchema.pre("save", function (next) {
   next();
 });
 
-// Instance method to get default address
+
 userProfileSchema.methods.getDefaultAddress = function () {
   return this.addresses.find((addr) => addr.isDefault) || null;
 };
 
-// Instance method to set default address
+
 userProfileSchema.methods.setDefaultAddress = function (addressId) {
-  // Remove default from all addresses
+
   this.addresses.forEach((addr) => {
     addr.isDefault = false;
   });
 
-  // Set the specified address as default
+
   const address = this.addresses.id(addressId);
   if (address) {
     address.isDefault = true;
@@ -191,12 +189,12 @@ userProfileSchema.methods.setDefaultAddress = function (addressId) {
   return this.save();
 };
 
-// Static method to find by auth user ID
+
 userProfileSchema.statics.findByAuthUserId = function (authUserId) {
   return this.findOne({ authUserId });
 };
 
-// Static method to create or update profile from better-auth data
+
 userProfileSchema.statics.createOrUpdateFromAuth = function (authUser) {
   return this.findOneAndUpdate(
     { authUserId: authUser.id },

@@ -51,7 +51,6 @@ const wishlistSchema = new mongoose.Schema(
   }
 );
 
-// Update the updatedAt field when items change
 wishlistSchema.pre("save", function (next) {
   this.updatedAt = new Date();
   next();

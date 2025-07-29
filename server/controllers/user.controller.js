@@ -5,16 +5,47 @@ import {
   getIndianStates,
 } from "../utils/addressValidation.js";
 
-// GET /api/users/profile - Get current user's profile
 export const getUserProfile = async (req, res) => {
   try {
-    const { authUserId, session } = req.user; // From auth middleware
+    const { authUserId, session } = req.user;
 
     let userProfile = await UserProfile.findByAuthUserId(authUserId);
 
-    // If no profile exists, create one from better-auth data
     if (!userProfile) {
-      userProfile = await UserProfile.createOrUpdateFromAuth(session.user);
+      const firstName =
+        session.user.firstName || session.user.name?.split(" ")[0] || "";
+      const lastName =
+        session.user.lastName ||
+        session.user.name?.split(" ").slice(1).join(" ") ||
+        "";
+
+      userProfile = await UserProfile.createOrUpdateFromAuth({
+        id: authUserId,
+        email: session.user.email,
+        firstName,
+        lastName,
+        name: session.user.name,
+      });
+    } else {
+      const betterAuthFirstName =
+        session.user.firstName || session.user.name?.split(" ")[0] || "";
+      const betterAuthLastName =
+        session.user.lastName ||
+        session.user.name?.split(" ").slice(1).join(" ") ||
+        "";
+
+      if (
+        !userProfile.firstName &&
+        !userProfile.lastName &&
+        (betterAuthFirstName || betterAuthLastName)
+      ) {
+        userProfile.firstName = betterAuthFirstName;
+        userProfile.lastName = betterAuthLastName;
+        userProfile.email = session.user.email;
+        userProfile.lastLogin = new Date();
+
+        await userProfile.save();
+      }
     }
 
     res.json({
@@ -22,7 +53,7 @@ export const getUserProfile = async (req, res) => {
       data: userProfile,
     });
   } catch (error) {
-    console.error("Get user profile error:", error);
+    console.error("❌ Get user profile error:", error);
     res.status(500).json({
       error: "Failed to fetch user profile",
       message: error.message,
@@ -30,13 +61,11 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
-// POST /api/users/profile - Create user profile (now handles better-auth data automatically)
 export const createUserProfile = async (req, res) => {
   try {
     const { authUserId, session } = req.user;
     const profileData = req.body;
 
-    // Check if profile already exists
     const existingProfile = await UserProfile.findByAuthUserId(authUserId);
     if (existingProfile) {
       return res.status(400).json({
@@ -45,7 +74,6 @@ export const createUserProfile = async (req, res) => {
       });
     }
 
-    // Validate addresses if provided
     if (profileData.addresses && profileData.addresses.length > 0) {
       for (let i = 0; i < profileData.addresses.length; i++) {
         const address = profileData.addresses[i];
@@ -60,7 +88,6 @@ export const createUserProfile = async (req, res) => {
           });
         }
 
-        // Use standardized address if validation passed
         if (validation.standardizedAddress) {
           profileData.addresses[i] = {
             ...validation.standardizedAddress,
@@ -70,7 +97,6 @@ export const createUserProfile = async (req, res) => {
       }
     }
 
-    // Create new profile with better-auth data
     const newProfile = new UserProfile({
       ...profileData,
       authUserId,
@@ -114,26 +140,19 @@ export const createUserProfile = async (req, res) => {
   }
 };
 
-// PUT /api/users/profile - Update user profile
 export const updateUserProfile = async (req, res) => {
   try {
     const { authUserId } = req.user;
     const updateData = req.body;
 
-    console.log("Update profile request:", { authUserId, updateData });
-
     const userProfile = await UserProfile.findByAuthUserId(authUserId);
     if (!userProfile) {
-      console.log("User profile not found for authUserId:", authUserId);
       return res.status(404).json({
         error: "User profile not found",
         message: "Please create your profile first",
       });
     }
 
-    console.log("Found user profile:", userProfile);
-
-    // Validate addresses if being updated
     if (updateData.addresses && updateData.addresses.length > 0) {
       for (let i = 0; i < updateData.addresses.length; i++) {
         const address = updateData.addresses[i];
@@ -148,7 +167,6 @@ export const updateUserProfile = async (req, res) => {
           });
         }
 
-        // Use standardized address if validation passed
         if (validation.standardizedAddress) {
           updateData.addresses[i] = {
             ...validation.standardizedAddress,
@@ -158,7 +176,6 @@ export const updateUserProfile = async (req, res) => {
       }
     }
 
-    // Update profile
     const updatedProfile = await UserProfile.findByIdAndUpdate(
       userProfile._id,
       updateData,
@@ -167,8 +184,6 @@ export const updateUserProfile = async (req, res) => {
         runValidators: true,
       }
     );
-
-    console.log("Profile updated successfully:", updatedProfile);
 
     res.json({
       success: true,
@@ -195,7 +210,6 @@ export const updateUserProfile = async (req, res) => {
   }
 };
 
-// POST /api/users/addresses - Add new address (replaces existing addresses)
 export const addAddress = async (req, res) => {
   try {
     const { authUserId } = req.user;
@@ -209,7 +223,6 @@ export const addAddress = async (req, res) => {
       });
     }
 
-    // Validate the new address
     const validation = await validateAddress(newAddress);
     if (!validation.isValid) {
       return res.status(400).json({
@@ -219,13 +232,11 @@ export const addAddress = async (req, res) => {
       });
     }
 
-    // Use standardized address and make it the default
     const standardizedAddress = {
       ...validation.standardizedAddress,
-      isDefault: true, // Always make it default since it's the only address
+      isDefault: true,
     };
 
-    // Replace all existing addresses with the new one
     userProfile.addresses = [standardizedAddress];
     await userProfile.save();
 
@@ -243,7 +254,6 @@ export const addAddress = async (req, res) => {
   }
 };
 
-// PUT /api/users/addresses/:addressId - Update specific address
 export const updateAddress = async (req, res) => {
   try {
     const { authUserId } = req.user;
@@ -266,7 +276,6 @@ export const updateAddress = async (req, res) => {
       });
     }
 
-    // Validate the updated address
     const validation = await validateAddress(updateData);
     if (!validation.isValid) {
       return res.status(400).json({
@@ -276,10 +285,9 @@ export const updateAddress = async (req, res) => {
       });
     }
 
-    // Update address with standardized data and ensure it remains default
     Object.assign(address, {
       ...validation.standardizedAddress,
-      isDefault: true, // Always keep it as default since it's the only address
+      isDefault: true,
     });
 
     await userProfile.save();
@@ -298,7 +306,6 @@ export const updateAddress = async (req, res) => {
   }
 };
 
-// DELETE /api/users/addresses/:addressId - Delete specific address
 export const deleteAddress = async (req, res) => {
   try {
     const { authUserId } = req.user;
@@ -320,7 +327,6 @@ export const deleteAddress = async (req, res) => {
       });
     }
 
-    // Remove address
     userProfile.addresses.pull(addressId);
     await userProfile.save();
 
@@ -337,7 +343,6 @@ export const deleteAddress = async (req, res) => {
   }
 };
 
-// PUT /api/users/addresses/:addressId/default - Set address as default
 export const setDefaultAddress = async (req, res) => {
   try {
     const { authUserId } = req.user;
@@ -367,7 +372,6 @@ export const setDefaultAddress = async (req, res) => {
   }
 };
 
-// GET /api/users/states - Get all Indian states
 export const getStates = async (req, res) => {
   try {
     const states = await getIndianStates();
@@ -384,7 +388,6 @@ export const getStates = async (req, res) => {
   }
 };
 
-// GET /api/users/cities/:state - Get cities for a specific state
 export const getCities = async (req, res) => {
   try {
     const { state } = req.params;
@@ -402,29 +405,20 @@ export const getCities = async (req, res) => {
   }
 };
 
-// DELETE /api/users/profile - Delete user account
 export const deleteUserAccount = async (req, res) => {
   try {
     const { authUserId } = req.user;
 
-    console.log("Delete account request for authUserId:", authUserId);
-
     const userProfile = await UserProfile.findByAuthUserId(authUserId);
     if (!userProfile) {
-      console.log("User profile not found for deletion:", authUserId);
       return res.status(404).json({
         error: "User profile not found",
         message: "User profile does not exist",
       });
     }
 
-    console.log("Found user profile for deletion:", userProfile._id);
-
-    // Delete the user profile first
     await UserProfile.findByIdAndDelete(userProfile._id);
-    console.log("User profile deleted successfully:", userProfile._id);
 
-    // Return success - the Better Auth user will be deleted by the client
     res.json({
       success: true,
       message: "Account deleted successfully",

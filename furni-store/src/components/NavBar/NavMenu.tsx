@@ -31,10 +31,10 @@ export const NavMenu = (props: React.ComponentProps<typeof NavigationMenu>) => {
             </NavigationMenuLink>
           </NavigationMenuItem>
         )}
-        
+
         <NavigationMenuItem>
           <NavigationMenuLink asChild>
-            <Link to="/contact">Contact Us</Link>
+            <Link to="/help">Help & Contact</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>

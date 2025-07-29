@@ -1,20 +1,23 @@
-import mongoose from "mongoose";
 import { app } from "./app.js";
-import dotenv from "dotenv";
+import { connectDB } from "./utils/db.js";
+import { validateStripeConfig } from "./utils/stripeConfig.js";
 
-dotenv.config();
+const PORT = process.env.PORT || 5001;
 
-const PORT = process.env.PORT || 5000;
+const startServer = async () => {
+  try {
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("✅ Mongoose connected successfully");
+    await connectDB();
+
+    validateStripeConfig();
+
     app.listen(PORT, () => {
       console.log(`🚀 Server is running on port ${PORT}`);
     });
-  })
-  .catch((err) => {
-    console.error("❌ Mongoose connection failed:", err.message);
-    process.exit(1); 
-  });
+  } catch (error) {
+    console.error("❌ Failed to start server:", error);
+    process.exit(1);
+  }
+};
+
+startServer();

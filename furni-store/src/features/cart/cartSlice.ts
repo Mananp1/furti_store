@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import type { Product } from "@/components/Product/ProductCardBase";
+import type { Product } from "@/lib/types/products";
 import axios from "axios";
 
 export interface CartItem extends Product {
@@ -27,9 +27,12 @@ export const fetchCart = createAsyncThunk(
   "cart/fetchCart",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("http://localhost:5000/api/cart", {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/cart`,
+        {
+          withCredentials: true,
+        }
+      );
       return response.data.data.items;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -49,7 +52,7 @@ export const addToCartAPI = createAsyncThunk(
   async (product: Product, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/cart/add",
+        `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/cart/add`,
         { product },
         { withCredentials: true }
       );
@@ -75,7 +78,7 @@ export const updateCartItemAPI = createAsyncThunk(
   ) => {
     try {
       const response = await axios.put(
-        "http://localhost:5000/api/cart/update",
+        `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/cart/update`,
         { productId, quantity },
         { withCredentials: true }
       );
@@ -98,7 +101,7 @@ export const removeFromCartAPI = createAsyncThunk(
   async (productId: string, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/api/cart/remove/${productId}`,
+        `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/cart/remove/${productId}`,
         { withCredentials: true }
       );
       return response.data.data.items;
@@ -119,11 +122,10 @@ export const clearCartAPI = createAsyncThunk(
   "cart/clearCartAPI",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(
-        "http://localhost:5000/api/cart/clear",
-        {
-          withCredentials: true,
-        }
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/cart/clear`,
+        {},
+        { withCredentials: true }
       );
       return response.data.data.items;
     } catch (error) {

@@ -49,11 +49,7 @@ export const addressSchema = z.object({
     .string()
     .min(2, "City name must be at least 2 characters")
     .max(50, "City name cannot exceed 50 characters"),
-  state: z.enum(INDIAN_STATES, {
-    errorMap: () => ({
-      message: "Please select a valid Indian state (top 7 states by GDP only)",
-    }),
-  }),
+  state: z.enum(INDIAN_STATES),
   zipCode: z
     .string()
     .regex(/^[1-9][0-9]{5}$/, "Please enter a valid 6-digit PIN code"),

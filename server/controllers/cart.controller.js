@@ -1,6 +1,6 @@
 import { Cart } from "../models/cart.model.js";
 
-// Helper function to transform cart items for frontend
+
 const transformCartForFrontend = (cart) => {
   const transformedItems = cart.items.map((item) => ({
     _id: item.productId,
@@ -18,7 +18,7 @@ const transformCartForFrontend = (cart) => {
   };
 };
 
-// GET /api/cart - Get user's cart
+
 export const getUserCart = async (req, res) => {
   try {
     const { authUserId } = req.user;
@@ -26,7 +26,7 @@ export const getUserCart = async (req, res) => {
     let cart = await Cart.findOne({ authUserId });
 
     if (!cart) {
-      // Create empty cart if it doesn't exist
+      
       cart = new Cart({ authUserId, items: [] });
       await cart.save();
     }
@@ -44,7 +44,7 @@ export const getUserCart = async (req, res) => {
   }
 };
 
-// POST /api/cart/add - Add item to cart
+
 export const addToCart = async (req, res) => {
   try {
     const { authUserId } = req.user;
@@ -62,7 +62,7 @@ export const addToCart = async (req, res) => {
       cart = new Cart({ authUserId, items: [] });
     }
 
-    // Check if product already exists in cart
+    
     const existingItem = cart.items.find(
       (item) => item.productId === product._id
     );
@@ -96,7 +96,7 @@ export const addToCart = async (req, res) => {
   }
 };
 
-// PUT /api/cart/update - Update item quantity
+
 export const updateCartItem = async (req, res) => {
   try {
     const { authUserId } = req.user;
@@ -125,7 +125,7 @@ export const updateCartItem = async (req, res) => {
     }
 
     if (quantity <= 0) {
-      // Remove item if quantity is 0 or negative
+      
       cart.items = cart.items.filter((item) => item.productId !== productId);
     } else {
       item.quantity = quantity;
@@ -146,7 +146,7 @@ export const updateCartItem = async (req, res) => {
   }
 };
 
-// DELETE /api/cart/remove/:productId - Remove item from cart
+
 export const removeFromCart = async (req, res) => {
   try {
     const { authUserId } = req.user;
@@ -176,7 +176,7 @@ export const removeFromCart = async (req, res) => {
   }
 };
 
-// DELETE /api/cart/clear - Clear entire cart
+
 export const clearCart = async (req, res) => {
   try {
     const { authUserId } = req.user;
@@ -201,6 +201,38 @@ export const clearCart = async (req, res) => {
     res.status(500).json({
       error: "Failed to clear cart",
       message: error.message,
+    });
+  }
+};
+
+
+export const clearCartAfterPayment = async (req, res) => {
+  try {
+    const userId = req.user.authUserId;
+
+    
+    const result = await Cart.findOneAndUpdate(
+      { userId },
+      { $set: { items: [] } },
+      { new: true, upsert: true }
+    );
+
+
+
+    res.status(200).json({
+      success: true,
+      message: "Cart cleared successfully",
+      data: {
+        items: result.items,
+        totalItems: result.items.length,
+      },
+    });
+  } catch (error) {
+    console.error("❌ Error clearing cart:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to clear cart",
+      error: error.message,
     });
   }
 };

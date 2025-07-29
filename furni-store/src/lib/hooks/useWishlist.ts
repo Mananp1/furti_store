@@ -8,7 +8,7 @@ import {
   setWishlistItems,
 } from "@/features/wishlist/wishlistSlice";
 import { toast } from "react-toastify";
-import type { Product } from "@/components/Product/ProductCardBase";
+import type { Product } from "@/lib/types/products";
 
 export const useWishlist = () => {
   const dispatch = useAppDispatch();

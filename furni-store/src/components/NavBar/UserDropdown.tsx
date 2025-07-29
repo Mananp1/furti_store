@@ -1,9 +1,4 @@
-import { useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { useSession, signOut } from "@/lib/auth-client";
-import { toast } from "react-toastify";
-import { useUserProfile } from "@/lib/hooks/useUserProfile";
-
 import {
   ChevronDown,
   User,
@@ -11,7 +6,6 @@ import {
   LogOut,
   Heart,
   ShoppingCart,
-  MapPin,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -24,12 +18,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useNavBarLogic } from "./useNavBarLogic";
 
 export const UserDropdown = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { data: session, isPending } = useSession();
-
-  const { profile } = useUserProfile();
+  const {
+    session,
+    isPending,
+    isDropdownOpen,
+    setIsDropdownOpen,
+    handleLogout,
+    getDisplayName,
+  } = useNavBarLogic();
 
   if (isPending) {
     return (
@@ -44,34 +43,8 @@ export const UserDropdown = () => {
     return null;
   }
 
-  const handleLogout = async () => {
-    try {
-      // Don't clear cart/wishlist on logout - let them persist
-      await signOut();
-      toast.success("Logged out successfully!");
-    } catch {
-      toast.error("Failed to log out");
-    }
-  };
-
-  // Get display name
-  const getDisplayName = () => {
-    if (profile?.firstName && profile?.lastName) {
-      return `${profile.firstName} ${profile.lastName}`;
-    }
-    if (profile?.firstName) {
-      return profile.firstName;
-    }
-    // Fallback to Better Auth user's name if set
-    if (session.user.name && session.user.name !== session.user.email) {
-      return session.user.name;
-    }
-    // Fallback to email if no name is set
-    return session.user.email?.split("@")[0] || "User";
-  };
-
   return (
-    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+    <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
@@ -92,7 +65,7 @@ export const UserDropdown = () => {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-56" align="end" sideOffset={8}>
+      <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
@@ -103,49 +76,31 @@ export const UserDropdown = () => {
             </p>
           </div>
         </DropdownMenuLabel>
-
         <DropdownMenuSeparator />
-
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link to="/wishlist" className="flex items-center gap-2">
-              <Heart className="h-4 w-4" />
-              Wishlist
+            <Link to="/wishlist" className="cursor-pointer">
+              <Heart className="mr-2 h-4 w-4" />
+              <span>Wishlist</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/checkout" className="flex items-center gap-2">
-              <ShoppingCart className="h-4 w-4" />
-              Checkout
+            <Link to="/orders" className="cursor-pointer">
+              <ShoppingCart className="mr-2 h-4 w-4" />
+              <span>Orders</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/orders" className="flex items-center gap-2">
-              <MapPin className="h-4 w-4" />
-              Orders
+            <Link to="/settings" className="cursor-pointer">
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Settings</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuGroup>
-
         <DropdownMenuSeparator />
-
-        <DropdownMenuGroup>
-          <DropdownMenuItem asChild>
-            <Link to="/settings" className="flex items-center gap-2">
-              <Settings className="h-4 w-4" />
-              Settings
-            </Link>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-
-        <DropdownMenuSeparator />
-
-        <DropdownMenuItem
-          onClick={handleLogout}
-          className="flex items-center gap-2 text-destructive focus:text-destructive"
-        >
-          <LogOut className="h-4 w-4" />
-          Log out
+        <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

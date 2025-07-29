@@ -20,8 +20,20 @@ declare module "@tanstack/react-router" {
   }
 }
 
-// Create QueryClient instance
-const queryClient = new QueryClient();
+// Create QueryClient instance with optimized configuration
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30 * 60 * 1000, // 30 minutes - data is fresh for 30 minutes
+      gcTime: 60 * 60 * 1000, // 60 minutes - keep in cache for 1 hour
+      refetchOnWindowFocus: false, // Don't refetch when window regains focus
+      refetchOnMount: false, // Don't refetch on component mount if data exists
+      refetchOnReconnect: false, // Don't refetch when reconnecting to network
+      refetchInterval: false, // Don't refetch on interval
+      retry: 1, // Only retry once on failure
+    },
+  },
+});
 
 // Mount the app
 const rootElement = document.getElementById("root")!;

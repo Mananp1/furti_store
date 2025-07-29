@@ -1,12 +1,9 @@
 import { auth } from "../auth.js";
 
-/**
- * Middleware to authenticate user and attach user info to request
- * This middleware extracts the user from better-auth session
- */
+
 export const authenticateUser = async (req, res, next) => {
   try {
-    // Get the session from better-auth
+
     const session = await auth.api.getSession({
       headers: req.headers,
     });
@@ -18,7 +15,7 @@ export const authenticateUser = async (req, res, next) => {
       });
     }
 
-    // Attach user info to request object
+    
     req.user = {
       authUserId: session.user.id,
       email: session.user.email,

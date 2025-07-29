@@ -45,7 +45,7 @@ export const fetchUserProfile = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/users/profile",
+        `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/users/profile`,
         {
           withCredentials: true,
         }
@@ -73,7 +73,7 @@ export const updateUserProfile = createAsyncThunk(
   ) => {
     try {
       const response = await axios.put(
-        "http://localhost:5000/api/users/profile",
+        `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/users/profile`,
         profileData,
         {
           headers: {
@@ -102,7 +102,7 @@ export const addAddress = createAsyncThunk(
   async (address: Omit<Address, "isDefault">, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/users/addresses",
+        `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/users/addresses`,
         address,
         {
           headers: {
@@ -134,7 +134,7 @@ export const updateAddress = createAsyncThunk(
   ) => {
     try {
       const response = await axios.put(
-        `http://localhost:5000/api/users/addresses/${addressId}`,
+        `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/users/addresses/${addressId}`,
         address,
         {
           headers: {
@@ -163,7 +163,7 @@ export const deleteUserAccount = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
-        "http://localhost:5000/api/users/profile",
+        `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/users/profile`,
         {
           withCredentials: true,
         }

@@ -1,49 +1,22 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
-import { ShoppingCart, ArrowRight } from "lucide-react"; // Added ShoppingCart icon for relevance
 
-const Home = () => {
+export default function Home() {
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 bg-gray-50">
-      {/* Light background for furniture feel */}
-      <div className="text-center max-w-2xl">
-        {/* Updated badge for 'New Arrivals' */}
-        <Badge className="rounded-full border-none bg-gradient-to-r from-black to-gray-800 text-white">
-          New Arrivals
-        </Badge>
-
-        {/* Updated Heading */}
-        <h1 className="mt-6 text-4xl sm:text-5xl md:text-6xl md:leading-[1.2] font-bold">
-          Discover Your Dream Furniture
-        </h1>
-
-        {/* Updated Description */}
-        <p className="mt-6 text-[17px] md:text-lg text-gray-700">
-          Explore our exclusive furniture collections designed to fit your home.
-          From modern styles to classic pieces, find exactly what you need to
-          create your perfect space.
-        </p>
-
-        {/* Action Buttons */}
-        <div className="mt-12 flex items-center justify-center gap-6">
-          {/* Shop Now Button */}
-          <Button variant="default" size="lg" className="flex items-center gap-2">
-            <Link to="/products" className="flex items-center gap-2">
-              Shop Now
-              <ArrowRight className="!h-5 !w-5" />
-            </Link>
-          </Button>
-
-          {/* Explore Collections Button */}
-          <Button variant="outline" size="lg" className="flex items-center gap-2">
-            <ShoppingCart className="!h-5 !w-5" />
-            Explore Collections
-          </Button>
-        </div>
-      </div>
+    <div className="flex flex-col items-center justify-center min-h-[60vh] py-12 px-4 text-center">
+      <h1 className="text-4xl font-bold mb-4 text-primary">
+        Welcome to FurniStore
+      </h1>
+      <p className="text-lg text-muted-foreground mb-8 max-w-xl">
+        Discover beautiful, modern furniture for every room. Shop our curated
+        collection and enjoy fast delivery, easy returns, and top-notch customer
+        service.
+      </p>
+      <Link
+        to="/products"
+        className="inline-block bg-primary text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-primary/90 transition"
+      >
+        Browse Products
+      </Link>
     </div>
   );
-};
-
-export default Home;
+}

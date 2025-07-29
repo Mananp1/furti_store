@@ -10,7 +10,7 @@ import {
   setCartItems,
 } from "@/features/cart/cartSlice";
 import { toast } from "react-toastify";
-import type { Product } from "@/components/Product/ProductCardBase";
+import type { Product } from "@/lib/types/products";
 
 export const useCart = () => {
   const dispatch = useAppDispatch();

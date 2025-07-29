@@ -1,22 +1,13 @@
-// src/components/ProductCardBase.tsx
+// src/components/Product/ProductCardBase.tsx
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag, Heart } from "lucide-react";
+import { Heart, ShoppingBag } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import { useSession } from "@/lib/auth-client";
 import { useCart } from "@/lib/hooks/useCart";
 import { useWishlist } from "@/lib/hooks/useWishlist";
-
-export type Product = {
-  _id: string;
-  title: string;
-  category: string;
-  material: string;
-  price: number;
-  images: string[];
-  description?: string;
-  rating?: number;
-};
+import { formatCurrency } from "@/lib/utils";
+import type { Product } from "@/lib/types/products";
 
 interface ProductCardBaseProps {
   product: Product;
@@ -84,7 +75,7 @@ export function ProductCardBase({
 
       <CardContent className="flex justify-between items-center mt-auto">
         <span className="text-lg font-semibold">
-          ${product.price.toFixed(2)}
+          {formatCurrency(product.price, "INR")}
         </span>
         <div className="flex gap-2">
           {showAddToCartButton && (

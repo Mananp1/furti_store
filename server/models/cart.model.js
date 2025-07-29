@@ -57,7 +57,7 @@ const cartSchema = new mongoose.Schema(
   }
 );
 
-// Update the updatedAt field when items change
+
 cartSchema.pre("save", function (next) {
   this.updatedAt = new Date();
   next();

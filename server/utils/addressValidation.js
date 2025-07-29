@@ -6,9 +6,9 @@ const COUNTRY_STATE_CITY_API_KEY = process.env.COUNTRY_STATE_CITY_API_KEY;
 const COUNTRY_STATE_CITY_BASE_URL = "https://api.countrystatecity.in/v1";
 
 const addressCache = new Map();
-const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+const CACHE_DURATION = 24 * 60 * 60 * 1000; 
 
-// Top 7 Indian states by GDP with ISO2 codes and their top 5 cities
+
 const TOP_INDIAN_STATES = [
   {
     name: "Maharashtra",
@@ -47,27 +47,27 @@ const TOP_INDIAN_STATES = [
   },
 ];
 
-// PIN code validation for India
+
 const validatePinCode = (pinCode) => {
   const pinRegex = /^[1-9][0-9]{5}$/;
   return pinRegex.test(pinCode);
 };
 
-// Basic address validation for India
+
 const validateIndianAddress = (address) => {
   const errors = [];
 
-  // Check if country is India
+
   if (address.country && address.country !== "India") {
     errors.push("Only Indian addresses are allowed");
   }
 
-  // Validate PIN code
+
   if (!address.zipCode || !validatePinCode(address.zipCode)) {
     errors.push("Please enter a valid 6-digit PIN code");
   }
 
-  // Validate state
+
   const stateExists = TOP_INDIAN_STATES.some(
     (state) => state.name === address.state
   );
@@ -77,7 +77,7 @@ const validateIndianAddress = (address) => {
     );
   }
 
-  // Validate required fields
+
   if (!address.street || address.street.length < 5) {
     errors.push("Street address must be at least 5 characters");
   }
@@ -93,10 +93,10 @@ const validateIndianAddress = (address) => {
   };
 };
 
-// Get cities for a specific state in India
+
 export const getCitiesByState = async (stateName) => {
   try {
-    // Find the state info
+
     const stateInfo = TOP_INDIAN_STATES.find(
       (state) => state.name === stateName
     );
@@ -104,7 +104,7 @@ export const getCitiesByState = async (stateName) => {
       return [];
     }
 
-    // Return the predefined top 5 cities for this state
+
     return stateInfo.cities;
   } catch (error) {
     console.error("Error fetching cities:", error);
@@ -112,10 +112,10 @@ export const getCitiesByState = async (stateName) => {
   }
 };
 
-// Get all top states in India
+
 export const getIndianStates = async () => {
   try {
-    // Return the predefined top 7 states
+
     return TOP_INDIAN_STATES.map((state) => state.name);
   } catch (error) {
     console.error("Error fetching states:", error);
@@ -131,7 +131,7 @@ export const validateAddress = async (address) => {
       return cached.data;
     }
 
-    // Do basic validation first
+
     const basicValidation = validateIndianAddress(address);
     if (!basicValidation.isValid) {
       return {
@@ -144,7 +144,7 @@ export const validateAddress = async (address) => {
       };
     }
 
-    // Validate city against state
+
     const stateInfo = TOP_INDIAN_STATES.find(
       (state) => state.name === address.state
     );
@@ -174,7 +174,7 @@ export const validateAddress = async (address) => {
       }
     }
 
-    // Return validated address
+
     const result = {
       isValid: true,
       standardizedAddress: {
@@ -210,7 +210,7 @@ export const getAddressSuggestions = async (input) => {
       return [];
     }
 
-    // Return suggestions based on top cities from all states
+
     const allCities = TOP_INDIAN_STATES.flatMap((state) =>
       state.cities.map((city) => ({
         name: city,

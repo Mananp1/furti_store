@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { Product } from "@/components/Product/ProductCardBase";
+import type { Product } from "@/lib/types/products";
 import axios from "axios";
 
 type WishlistState = {
@@ -20,9 +20,12 @@ export const fetchWishlist = createAsyncThunk(
   "wishlist/fetchWishlist",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get("http://localhost:5000/api/wishlist", {
-        withCredentials: true,
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/wishlist`,
+        {
+          withCredentials: true,
+        }
+      );
       return response.data.data.items;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -42,7 +45,7 @@ export const addToWishlistAPI = createAsyncThunk(
   async (product: Product, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/wishlist/add",
+        `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/wishlist/add`,
         { product },
         { withCredentials: true }
       );
@@ -65,7 +68,7 @@ export const removeFromWishlistAPI = createAsyncThunk(
   async (productId: string, { rejectWithValue }) => {
     try {
       const response = await axios.delete(
-        `http://localhost:5000/api/wishlist/remove/${productId}`,
+        `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/wishlist/remove/${productId}`,
         { withCredentials: true }
       );
       return response.data.data.items;
@@ -91,12 +94,14 @@ const wishlistSlice = createSlice({
     // Local actions for immediate UI updates
     addToWishlist(state, action: PayloadAction<Product>) {
       const exists = state.items.find(
-        (item) => item._id === action.payload._id
+        (item: Product) => item._id === action.payload._id
       );
       if (!exists) state.items.push(action.payload);
     },
     removeFromWishlist(state, action: PayloadAction<string>) {
-      state.items = state.items.filter((item) => item._id !== action.payload);
+      state.items = state.items.filter(
+        (item: Product) => item._id !== action.payload
+      );
     },
     setWishlistItems: (state, action: PayloadAction<Product[]>) => {
       state.items = action.payload;

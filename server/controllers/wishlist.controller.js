@@ -1,6 +1,5 @@
 import { Wishlist } from "../models/wishlist.model.js";
 
-// Helper function to transform wishlist items for frontend
 const transformWishlistForFrontend = (wishlist) => {
   const transformedItems = wishlist.items.map((item) => ({
     _id: item.productId,
@@ -17,7 +16,6 @@ const transformWishlistForFrontend = (wishlist) => {
   };
 };
 
-// GET /api/wishlist - Get user's wishlist
 export const getUserWishlist = async (req, res) => {
   try {
     const { authUserId } = req.user;
@@ -25,7 +23,6 @@ export const getUserWishlist = async (req, res) => {
     let wishlist = await Wishlist.findOne({ authUserId });
 
     if (!wishlist) {
-      // Create empty wishlist if it doesn't exist
       wishlist = new Wishlist({ authUserId, items: [] });
       await wishlist.save();
     }
@@ -43,7 +40,6 @@ export const getUserWishlist = async (req, res) => {
   }
 };
 
-// POST /api/wishlist/add - Add item to wishlist
 export const addToWishlist = async (req, res) => {
   try {
     const { authUserId } = req.user;
@@ -61,7 +57,6 @@ export const addToWishlist = async (req, res) => {
       wishlist = new Wishlist({ authUserId, items: [] });
     }
 
-    // Check if product already exists in wishlist
     const existingItem = wishlist.items.find(
       (item) => item.productId === product._id
     );
@@ -96,7 +91,6 @@ export const addToWishlist = async (req, res) => {
   }
 };
 
-// DELETE /api/wishlist/remove/:productId - Remove item from wishlist
 export const removeFromWishlist = async (req, res) => {
   try {
     const { authUserId } = req.user;
@@ -128,7 +122,6 @@ export const removeFromWishlist = async (req, res) => {
   }
 };
 
-// DELETE /api/wishlist/clear - Clear entire wishlist
 export const clearWishlist = async (req, res) => {
   try {
     const { authUserId } = req.user;
