@@ -17,7 +17,6 @@ import { handleStripeWebhook } from "./controllers/payment.controller.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export const app = express();
 
-// CORS configuration
 app.use(
   cors({
     origin: [
@@ -30,19 +29,16 @@ app.use(
   })
 );
 
-// Stripe webhook route (must be raw body - no JSON parsing)
 app.post(
   "/api/payments/webhook",
   express.raw({ type: "application/json" }),
   handleStripeWebhook
 );
 
-// Better Auth routes (must be before JSON parsing)
 app.all("/api/auth/*", toNodeHandler(auth));
 
 app.use(express.json());
 
-// API routes (with JSON parsing)
 app.use("/api/payments", paymentRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
@@ -72,7 +68,6 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
-// 404 handler
 app.use("*", (req, res) => {
   console.log("❌ Route not found:", {
     method: req.method,
@@ -85,7 +80,6 @@ app.use("*", (req, res) => {
   });
 });
 
-// Global error handler
 app.use((err, req, res, next) => {
   console.error("❌ Global error:", err);
   res.status(500).json({

@@ -22,7 +22,6 @@ const initialState: CartState = {
   error: null,
 };
 
-// Async thunks
 export const fetchCart = createAsyncThunk(
   "cart/fetchCart",
   async (_, { rejectWithValue }) => {
@@ -145,7 +144,6 @@ const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    // Local actions for immediate UI updates
     addToCart: (state, action: PayloadAction<Product>) => {
       const existingItem = state.items.find(
         (item) => item._id === action.payload._id
@@ -178,7 +176,6 @@ const cartSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Fetch cart
     builder
       .addCase(fetchCart.pending, (state) => {
         state.loading = true;
@@ -192,19 +189,15 @@ const cartSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      // Add to cart
       .addCase(addToCartAPI.fulfilled, (state, action) => {
         state.items = action.payload;
       })
-      // Update cart item
       .addCase(updateCartItemAPI.fulfilled, (state, action) => {
         state.items = action.payload;
       })
-      // Remove from cart
       .addCase(removeFromCartAPI.fulfilled, (state, action) => {
         state.items = action.payload;
       })
-      // Clear cart
       .addCase(clearCartAPI.fulfilled, (state, action) => {
         state.items = action.payload;
       });

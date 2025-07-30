@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Sheet,
   SheetTrigger,
@@ -55,10 +54,8 @@ export function ProductFilterSidebar({
     });
   };
 
-  // Mobile: Sheet for filters
   return (
     <>
-      {/* Mobile filter icon button and sheet */}
       <div className="md:hidden p-4 flex items-center">
         <Sheet>
           <SheetTrigger asChild>
@@ -109,7 +106,6 @@ export function ProductFilterSidebar({
                   ))}
                 </div>
               </div>
-              {/* Sort by (RadioGroup) */}
               <div>
                 <h3 className="px-2 text-xs font-medium tracking-wide text-muted-foreground uppercase mb-2">
                   Sort by
@@ -141,7 +137,6 @@ export function ProductFilterSidebar({
           </SheetContent>
         </Sheet>
       </div>
-      {/* Desktop sidebar with Accordion */}
       <div className="hidden md:block p-4">
         <Accordion type="multiple" className="w-full space-y-1">
           <AccordionItem value="category">

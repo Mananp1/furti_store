@@ -1,13 +1,9 @@
 import { AlertTriangle, X } from "lucide-react";
 import { useState, useEffect } from "react";
 
-// To reset the banner for testing, run in browser console:
-// localStorage.removeItem("testing-banner-dismissed"); window.location.reload();
-
 export const TestingBanner = () => {
   const [isVisible, setIsVisible] = useState(true);
 
-  // Check localStorage on mount
   useEffect(() => {
     const dismissed = localStorage.getItem("testing-banner-dismissed");
     if (dismissed === "true") {
@@ -33,7 +29,6 @@ export const TestingBanner = () => {
         <AlertTriangle className="h-4 w-4 text-yellow-400" />
       </div>
 
-      {/* Dismiss button */}
       <button
         onClick={handleDismiss}
         className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-300 hover:text-white transition-colors"

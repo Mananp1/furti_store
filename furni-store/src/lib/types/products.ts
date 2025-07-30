@@ -1,6 +1,5 @@
 import { z } from "zod";
-
-// Product Zod schema
+  
 export const productSchema = z.object({
   _id: z.string(),
   title: z.string(),
@@ -14,7 +13,6 @@ export const productSchema = z.object({
 
 export const productsSchema = z.array(productSchema);
 
-// TS types
 export type Product = z.infer<typeof productSchema>;
 
 export type SortOption =
@@ -28,7 +26,6 @@ export type Filters = {
   material: string[];
 };
 
-// Top 7 Indian states by GDP (matching backend)
 export const INDIAN_STATES = [
   "Maharashtra",
   "Tamil Nadu",
@@ -39,7 +36,6 @@ export const INDIAN_STATES = [
   "Telangana",
 ] as const;
 
-// Address schema for India
 export const addressSchema = z.object({
   street: z
     .string()

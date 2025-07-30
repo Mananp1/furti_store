@@ -18,7 +18,6 @@ export const useNavBarLogic = () => {
     }
   };
 
-  // Get display name
   const getDisplayName = () => {
     if (profile?.firstName && profile?.lastName) {
       return `${profile.firstName} ${profile.lastName}`;
@@ -26,11 +25,9 @@ export const useNavBarLogic = () => {
     if (profile?.firstName) {
       return profile.firstName;
     }
-    // Fallback to Better Auth user's name if set
     if (session?.user.name && session.user.name !== session.user.email) {
       return session.user.name;
     }
-    // Fallback to email if no name is set
     return session?.user.email?.split("@")[0] || "User";
   };
 

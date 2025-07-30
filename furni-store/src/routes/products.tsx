@@ -1,4 +1,4 @@
-// src/routes/products.tsx
+
 import ProductsPage from "@/pages/Products";
 import { Outlet, useParams } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";

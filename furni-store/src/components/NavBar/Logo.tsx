@@ -5,7 +5,6 @@ export const Logo = () => (
     to="/"
     className="flex items-center gap-2 font-bold text-xl text-primary"
   >
-    {/* Simple SVG icon */}
     <svg
       width="28"
       height="28"

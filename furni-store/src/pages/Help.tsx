@@ -18,7 +18,6 @@ const Help = () => {
       const response = await submitContactForm(data);
 
       if (response.success) {
-        // Show success message based on user status
         if (session?.user) {
           toast.success(
             "Message sent successfully. We'll respond to " +

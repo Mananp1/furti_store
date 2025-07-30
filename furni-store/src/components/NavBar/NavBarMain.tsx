@@ -18,14 +18,12 @@ export const NavBarMain = ({ isPending, session }: NavBarMainProps) => {
         <NavMenu className="hidden md:block" />
       </div>
 
-      {/* Desktop actions only (hidden on mobile) */}
       <div className="hidden md:flex items-center gap-3">
         <NavBarActions isPending={isPending} session={session} size="default" />
         {session && <UserDropdown />}
         <CartSheet />
       </div>
 
-      {/* Mobile Nav */}
       <div className="md:hidden flex items-center gap-2">
         <NavBarActions isPending={isPending} session={session} size="sm" />
         {session && <UserDropdown />}

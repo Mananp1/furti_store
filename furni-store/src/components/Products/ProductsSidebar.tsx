@@ -17,7 +17,6 @@ export const ProductsSidebar = ({
   sort,
   onSortChange,
 }: ProductsSidebarProps) => {
-  // Pass through props to ProductFilterSidebar
   return (
     <ProductFilterSidebar
       filters={filters}

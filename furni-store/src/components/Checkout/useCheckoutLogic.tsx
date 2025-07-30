@@ -8,7 +8,6 @@ import { INDIAN_STATES } from "@/lib/types/products";
 import { toast } from "react-toastify";
 import type { DeliveryOption } from "@/components/Cart/useCartLogic";
 
-// Top 5 cities for each of the top 7 states
 const STATE_CITIES = {
   Maharashtra: ["Mumbai", "Pune", "Nagpur", "Thane", "Nashik"],
   "Tamil Nadu": [
@@ -42,7 +41,6 @@ export const useCheckoutLogic = () => {
     updateQuantity,
     removeFromCart,
   } = useCart();
-  // Add type annotation for cartItems
   type CartItem = {
     _id: string;
     title: string;
@@ -68,24 +66,21 @@ export const useCheckoutLogic = () => {
 
   const subtotal = getTotalPrice();
 
-  // Calculate shipping cost based on subtotal (INR)
   const getShippingCost = (option: DeliveryOption, total: number) => {
     if (option === "regular") {
-      if (total >= 3000) return 0; // Free shipping over ₹3000
-      if (total >= 2000) return 99; // ₹99 for orders ₹2000-2999
-      return 199; // ₹199 for orders under ₹2000
+      if (total >= 3000) return 0;
+      if (total >= 2000) return 99;
+      return 199;
     } else {
-      // express delivery
-      if (total >= 3000) return 199; // ₹199 for express over ₹3000
-      if (total >= 2000) return 299; // ₹299 for express ₹2000-2999
-      return 399; // ₹399 for express under ₹2000
+      if (total >= 3000) return 199;
+      if (total >= 2000) return 299;
+      return 399;
     }
   };
 
   const shippingCost = getShippingCost(deliveryOption, subtotal);
   const totalPrice = subtotal + shippingCost;
 
-  // Update cities when state changes
   useEffect(() => {
     if (
       addressForm.state &&
@@ -97,7 +92,6 @@ export const useCheckoutLogic = () => {
     }
   }, [addressForm.state]);
 
-  // Initialize address form with existing address
   useEffect(() => {
     const defaultAddress = profile?.addresses?.[0];
     if (defaultAddress && !isEditingAddress) {
@@ -140,7 +134,6 @@ export const useCheckoutLogic = () => {
       }
       setIsEditingAddress(false);
     } catch (error: unknown) {
-      // Show real backend error message if available
       const message =
         error instanceof Error
           ? error.message
@@ -153,7 +146,6 @@ export const useCheckoutLogic = () => {
 
   const handleCancelEdit = () => {
     setIsEditingAddress(false);
-    // Reset form to current address
     const defaultAddress = profile?.addresses?.[0];
     if (defaultAddress) {
       setAddressForm({
@@ -204,13 +196,12 @@ export const useCheckoutLogic = () => {
     console.log("🚚 Delivery option:", deliveryOption);
 
     try {
-      // Transform cart items to match payment API expected format
       const transformedItems = typedCartItems.map((item) => ({
         productId: item._id,
-        name: item.title, // Transform title to name
+        name: item.title,
         price: item.price,
         quantity: item.quantity,
-        image: item.images?.[0] || "", // Transform images array to single image
+        image: item.images?.[0] || "",
       }));
 
       console.log("🔄 Transformed items:", transformedItems);
@@ -224,14 +215,13 @@ export const useCheckoutLogic = () => {
           lastName: profile.lastName,
           phone: profile.phone || "",
         },
-        deliveryOption, // Include delivery option
+        deliveryOption,
       };
 
       console.log("💰 Payment data:", paymentData);
 
       await processPayment(paymentMethod, paymentData);
     } catch (error: unknown) {
-      // Show real backend error message if available
       const message =
         error instanceof Error
           ? error.message

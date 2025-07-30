@@ -15,7 +15,6 @@ const initialState: WishlistState = {
   error: null,
 };
 
-// Async thunks
 export const fetchWishlist = createAsyncThunk(
   "wishlist/fetchWishlist",
   async (_, { rejectWithValue }) => {
@@ -91,7 +90,6 @@ const wishlistSlice = createSlice({
   name: "wishlist",
   initialState,
   reducers: {
-    // Local actions for immediate UI updates
     addToWishlist(state, action: PayloadAction<Product>) {
       const exists = state.items.find(
         (item: Product) => item._id === action.payload._id
@@ -108,7 +106,6 @@ const wishlistSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Fetch wishlist
     builder
       .addCase(fetchWishlist.pending, (state) => {
         state.loading = true;
@@ -122,11 +119,9 @@ const wishlistSlice = createSlice({
         state.loading = false;
         state.error = action.payload as string;
       })
-      // Add to wishlist
       .addCase(addToWishlistAPI.fulfilled, (state, action) => {
         state.items = action.payload;
       })
-      // Remove from wishlist
       .addCase(removeFromWishlistAPI.fulfilled, (state, action) => {
         state.items = action.payload;
       });

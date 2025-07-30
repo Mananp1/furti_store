@@ -1,4 +1,3 @@
-// src/components/Wishlist/WishlistCard.tsx
 import { ProductCardBase } from "../Product";
 import { useWishlist } from "@/lib/hooks/useWishlist";
 import type { Product } from "@/lib/types/products";

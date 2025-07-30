@@ -45,7 +45,6 @@ export const HelpForm = ({
     resolver: zodResolver(formSchema),
   });
 
-  // Auto-populate form fields when user is signed in
   useEffect(() => {
     if (session?.user && !isPending) {
       const userEmail = session.user.email || "";
@@ -64,7 +63,6 @@ export const HelpForm = ({
     if (onSubmit) {
       onSubmit(data);
     } else {
-      // Default behavior
       console.log("Form submitted:", data);
     }
   };
@@ -75,7 +73,6 @@ export const HelpForm = ({
         className="w-full space-y-4"
         onSubmit={form.handleSubmit(handleSubmit)}
       >
-        {/* Auto-population notice for signed-in users */}
         {isPending && (
           <div className="p-3 bg-muted/50 border border-muted rounded-lg mb-4">
             <p className="text-sm text-muted-foreground">

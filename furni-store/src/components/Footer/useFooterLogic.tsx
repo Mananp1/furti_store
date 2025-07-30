@@ -34,7 +34,6 @@ export const useFooterLogic = () => {
       return false;
     }
 
-    // TODO: Implement newsletter subscription logic
     toast.success("Thank you for subscribing!");
     return true;
   };

@@ -6,21 +6,14 @@ type FormData = {
   email: string;
 };
 
-export const useAuthLogic = (type: "login" | "signup") => {
+export const useAuthLogic = (_type: "login" | "signup") => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleFormSubmit = async (data: FormData) => {
     setIsLoading(true);
     const { email } = data;
 
-    console.log("🚀 Starting magic link process for:", email);
-    console.log("📧 Auth type:", type);
-    console.log("🌐 Frontend URL:", window.location.origin);
-
     try {
-      console.log("🔗 Calling signIn.magicLink...");
-
-      // Use environment variable or fallback to current origin
       const baseUrl = import.meta.env.VITE_APP_URL || window.location.origin;
       const callbackURL = `${baseUrl}/`;
       const errorCallbackURL = `${baseUrl}/login`;
@@ -32,13 +25,10 @@ export const useAuthLogic = (type: "login" | "signup") => {
         errorCallbackURL,
       });
 
-      console.log("📧 Magic link result:", result);
-
       if (result.error) {
         console.error("❌ Magic link error:", result.error);
         toast.error(result.error.message || "Failed to send magic link");
       } else {
-        console.log("✅ Magic link sent successfully");
         toast.success(
           "Magic link sent! Check your email (or console for development)."
         );
@@ -53,7 +43,6 @@ export const useAuthLogic = (type: "login" | "signup") => {
       toast.error("Failed to send magic link");
     } finally {
       setIsLoading(false);
-      console.log("🏁 Magic link process completed");
     }
   };
 

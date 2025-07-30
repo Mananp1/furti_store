@@ -38,7 +38,6 @@ export const AddressForm = ({
   return (
     <form onSubmit={onSaveAddress} className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* State */}
         <div className="md:col-span-2">
           <Label htmlFor="state">State *</Label>
           <Select
@@ -58,7 +57,6 @@ export const AddressForm = ({
           </Select>
         </div>
 
-        {/* City */}
         <div className="md:col-span-2">
           <Label htmlFor="city">City *</Label>
           <Select
@@ -79,7 +77,6 @@ export const AddressForm = ({
           </Select>
         </div>
 
-        {/* Street Address */}
         <div className="md:col-span-2">
           <Label htmlFor="street">Street Address *</Label>
           <Input
@@ -91,7 +88,6 @@ export const AddressForm = ({
           />
         </div>
 
-        {/* ZIP Code */}
         <div>
           <Label htmlFor="zipCode">ZIP Code *</Label>
           <Input
@@ -105,7 +101,6 @@ export const AddressForm = ({
           />
         </div>
 
-        {/* Country */}
         <div>
           <Label htmlFor="country">Country</Label>
           <Input
@@ -117,7 +112,6 @@ export const AddressForm = ({
         </div>
       </div>
 
-      {/* Action Buttons */}
       <div className="flex gap-3 pt-4">
         <Button type="submit" disabled={isLoading}>
           {isLoading ? "Saving..." : "Save Address"}

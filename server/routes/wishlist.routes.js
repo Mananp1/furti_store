@@ -9,18 +9,13 @@ import {
 
 const router = express.Router();
 
-
 router.use(authenticateUser);
-
 
 router.get("/", getUserWishlist);
 
-
 router.post("/add", addToWishlist);
 
-
 router.delete("/remove/:productId", removeFromWishlist);
-
 
 router.delete("/clear", clearWishlist);
 

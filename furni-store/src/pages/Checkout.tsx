@@ -10,7 +10,6 @@ import {
 
 const Checkout = () => {
   const {
-    // State
     profile,
     cartItems,
     subtotal,
@@ -25,7 +24,6 @@ const Checkout = () => {
     addressLoading,
     isProfileIncomplete,
 
-    // Actions
     setPaymentMethod,
     handleAddressInputChange,
     handleEditAddress,

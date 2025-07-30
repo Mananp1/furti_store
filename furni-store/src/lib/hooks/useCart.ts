@@ -17,12 +17,12 @@ export const useCart = () => {
   const { data: session } = useSession();
   const { items, loading, error } = useAppSelector((state) => state.cartState);
 
-  // Load cart when user logs in
+  
   useEffect(() => {
     if (session) {
       dispatch(fetchCart());
     } else {
-      // Clear cart when user logs out
+        
       dispatch(setCartItems([]));
     }
   }, [session, dispatch]);

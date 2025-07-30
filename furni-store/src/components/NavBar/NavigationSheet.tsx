@@ -18,7 +18,7 @@ export const NavigationSheet = () => {
           <Logo />
           <NavMenu orientation="vertical" className="mt-12" />
         </div>
-        {/* Cart */}
+
         <div className="flex gap-3 justify-center mt-8 mb-4">
           <CartSheet />
         </div>

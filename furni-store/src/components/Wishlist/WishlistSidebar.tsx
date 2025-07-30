@@ -17,7 +17,7 @@ export const WishlistSidebar = ({
   sort,
   onSortChange,
 }: WishlistSidebarProps) => {
-  // Pass through props to WishlistFilterSidebar
+
   return (
     <WishlistFilterSidebar
       filters={filters}

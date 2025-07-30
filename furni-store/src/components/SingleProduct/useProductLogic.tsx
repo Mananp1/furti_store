@@ -55,7 +55,6 @@ export const useProductLogic = () => {
     if (isWishlisted) {
       await removeFromWishlist(product._id);
     } else {
-      // Transform product to match Product type
       const wishlistProduct = {
         _id: product._id,
         title: product.title,
@@ -72,7 +71,6 @@ export const useProductLogic = () => {
   const handleAddToCart = async () => {
     if (!product) return;
 
-    // Add the product to cart with the selected quantity
     const cartProduct = {
       _id: product._id,
       title: product.title,
@@ -83,7 +81,6 @@ export const useProductLogic = () => {
       description: product.description,
     };
 
-    // Add multiple times based on quantity
     for (let i = 0; i < quantity; i++) {
       await addToCart(cartProduct);
     }

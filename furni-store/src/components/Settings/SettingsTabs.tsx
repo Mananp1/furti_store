@@ -25,14 +25,12 @@ export const SettingsTabs = ({
   onTabChange,
   tabOptions,
 }: SettingsTabsProps) => {
-  // If there's only one tab, don't show the tab navigation
   if (tabOptions.length <= 1) {
     return null;
   }
 
   return (
     <>
-      {/* Mobile Dropdown */}
       <div className="sm:hidden mb-6">
         <Select value={activeTab} onValueChange={onTabChange}>
           <SelectTrigger className="w-full">
@@ -56,7 +54,6 @@ export const SettingsTabs = ({
         </Select>
       </div>
 
-      {/* Desktop Tabs */}
       <div className="hidden sm:block">
         <Tabs
           value={activeTab}

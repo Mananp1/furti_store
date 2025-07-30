@@ -39,7 +39,6 @@ const initialState: UserState = {
   addressLoading: false,
 };
 
-// Async thunks
 export const fetchUserProfile = createAsyncThunk(
   "user/fetchProfile",
   async (_, { rejectWithValue }) => {
@@ -196,7 +195,6 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Fetch profile
     builder
       .addCase(fetchUserProfile.pending, (state) => {
         state.loading = true;
@@ -211,7 +209,6 @@ const userSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // Update profile
       .addCase(updateUserProfile.pending, (state) => {
         state.updateLoading = true;
         state.error = null;
@@ -220,7 +217,6 @@ const userSlice = createSlice({
         state.updateLoading = false;
       })
 
-      // Add address (replaces existing addresses)
       .addCase(addAddress.pending, (state) => {
         state.addressLoading = true;
         state.error = null;
@@ -228,7 +224,6 @@ const userSlice = createSlice({
       .addCase(addAddress.fulfilled, (state, action) => {
         state.addressLoading = false;
         if (state.profile) {
-          // Replace all addresses with the new one
           state.profile.addresses = [action.payload];
         }
       })
@@ -237,7 +232,6 @@ const userSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // Update address
       .addCase(updateAddress.pending, (state) => {
         state.addressLoading = true;
         state.error = null;
@@ -258,7 +252,6 @@ const userSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // Delete account
       .addCase(deleteUserAccount.pending, (state) => {
         state.deleteLoading = true;
         state.error = null;

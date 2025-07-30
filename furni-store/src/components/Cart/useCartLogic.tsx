@@ -23,17 +23,15 @@ export const useCartLogic = () => {
   const totalItems = getTotalItems();
   const subtotal = getTotalPrice();
 
-  // Calculate shipping cost based on subtotal (INR)
   const getShippingCost = (option: DeliveryOption, total: number) => {
     if (option === "regular") {
-      if (total >= 3000) return 0; // Free shipping over ₹3000
-      if (total >= 2000) return 99; // ₹99 for orders ₹2000-2999
-      return 199; // ₹199 for orders under ₹2000
+      if (total >= 3000) return 0;
+      if (total >= 2000) return 99;
+      return 199;
     } else {
-      // express delivery
-      if (total >= 3000) return 199; // ₹199 for express over ₹3000
-      if (total >= 2000) return 299; // ₹299 for express ₹2000-2999
-      return 399; // ₹399 for express under ₹2000
+      if (total >= 3000) return 199;
+      if (total >= 2000) return 299;
+      return 399;
     }
   };
 

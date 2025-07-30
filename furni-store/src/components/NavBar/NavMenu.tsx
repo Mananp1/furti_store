@@ -7,7 +7,6 @@ import {
 import { Link } from "@tanstack/react-router";
 import { useSession } from "@/lib/auth-client";
 
-// Automatically infer the props type from NavigationMenu
 export const NavMenu = (props: React.ComponentProps<typeof NavigationMenu>) => {
   const { data: session } = useSession();
 

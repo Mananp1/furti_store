@@ -19,7 +19,7 @@ export const NavBarActions = ({
   }
 
   if (session) {
-    return null; // UserDropdown will be rendered separately
+    return null;
   }
 
   return (

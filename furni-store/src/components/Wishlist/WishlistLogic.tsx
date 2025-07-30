@@ -10,7 +10,6 @@ export const useWishlistLogic = () => {
   });
   const [sort, setSort] = useState<SortOption>("default");
 
-  // Get wishlist items from hook
   const { items: wishlistItems } = useWishlist();
 
   const filteredProducts = wishlistItems.filter((p) => {
@@ -20,8 +19,7 @@ export const useWishlistLogic = () => {
       filters.material.length === 0 || filters.material.includes(p.material);
     return matchesCategory && matchesMaterial;
   });
-
-  // Sort products according to sort option
+  
   const sortedProducts = (() => {
     switch (sort) {
       case "title":

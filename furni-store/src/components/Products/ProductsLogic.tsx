@@ -23,7 +23,6 @@ export const useProductsLogic = () => {
       const response = await axios.get(
         `${import.meta.env.VITE_API_URL || "http://localhost:5001/api"}/products`
       );
-      // Validate with Zod
       return productsSchema.parse(response.data);
     },
   });
@@ -35,8 +34,7 @@ export const useProductsLogic = () => {
       filters.material.length === 0 || filters.material.includes(p.material);
     return matchesCategory && matchesMaterial;
   });
-
-  // Sort products according to sort option
+    
   const sortedProducts = (() => {
     switch (sort) {
       case "title":

@@ -38,9 +38,7 @@ export const CartSummary = ({
 
   return (
     <div className="border-t p-4 space-y-4">
-      {/* Delivery Options or Login Prompt */}
       {session ? (
-        // Logged in user - show delivery options
         <div className="space-y-3">
           <h4 className="font-medium text-sm">Delivery Options</h4>
           <RadioGroup
@@ -89,7 +87,6 @@ export const CartSummary = ({
           </RadioGroup>
         </div>
       ) : (
-        // Non-logged in user - show login prompt
         <div className="border-2 border-yellow-400 rounded-lg p-4 bg-yellow-50 space-y-3">
           <div className="text-center">
             <h4 className="font-medium text-sm text-yellow-800 mb-2">
@@ -112,7 +109,6 @@ export const CartSummary = ({
 
       <Separator />
 
-      {/* Price Breakdown */}
       <div className="space-y-2">
         <div className="flex justify-between">
           <span>Subtotal</span>
@@ -139,12 +135,10 @@ export const CartSummary = ({
         </div>
       </div>
 
-      {/* Continue Shopping Button */}
       <Button variant="outline" className="w-full" asChild>
         <Link to="/products">Continue Shopping</Link>
       </Button>
 
-      {/* Checkout Button */}
       <Button
         onClick={handleCheckout}
         disabled={isProcessing || !session}

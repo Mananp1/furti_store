@@ -16,10 +16,8 @@ export const AddressSection = ({
   onEditAddress,
   children,
 }: AddressSectionProps) => {
-  // Check if profile is incomplete
   const isProfileIncomplete = !profile?.firstName || !profile?.lastName;
 
-  // Get the default address (first address in the array)
   const defaultAddress = profile?.addresses?.[0];
 
   if (isProfileIncomplete) {

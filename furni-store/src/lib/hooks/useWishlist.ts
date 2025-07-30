@@ -17,12 +17,10 @@ export const useWishlist = () => {
     (state) => state.wishlistState
   );
 
-  // Load wishlist when user logs in
   useEffect(() => {
     if (session) {
       dispatch(fetchWishlist());
     } else {
-      // Clear wishlist when user logs out
       dispatch(setWishlistItems([]));
     }
   }, [session, dispatch]);

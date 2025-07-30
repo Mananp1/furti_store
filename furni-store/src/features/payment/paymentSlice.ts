@@ -6,7 +6,6 @@ import {
   getPaymentByOrderId,
 } from "@/lib/payment";
 
-// Types
 export interface PaymentItem {
   productId: string;
   name: string;
@@ -78,7 +77,6 @@ const initialState: PaymentState = {
   paymentHistory: null,
 };
 
-// Async thunks
 export const createStripePayment = createAsyncThunk(
   "payment/createStripePayment",
   async (paymentData: PaymentData, { rejectWithValue }) => {
@@ -132,7 +130,6 @@ export const fetchPaymentByOrderId = createAsyncThunk(
   }
 );
 
-// Slice
 const paymentSlice = createSlice({
   name: "payment",
   initialState,
@@ -169,7 +166,6 @@ const paymentSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Create Stripe Payment
     builder
       .addCase(createStripePayment.pending, (state) => {
         state.processing = true;
@@ -184,7 +180,6 @@ const paymentSlice = createSlice({
         state.error = action.payload as string;
       });
 
-    // Create COD Order
     builder
       .addCase(createCODOrder.pending, (state) => {
         state.processing = true;
@@ -199,7 +194,6 @@ const paymentSlice = createSlice({
         state.error = action.payload as string;
       });
 
-    // Fetch Payment History
     builder
       .addCase(fetchPaymentHistory.pending, (state) => {
         state.loading = true;
@@ -214,7 +208,6 @@ const paymentSlice = createSlice({
         state.error = action.payload as string;
       });
 
-    // Fetch Payment by Order ID
     builder
       .addCase(fetchPaymentByOrderId.pending, (state) => {
         state.loading = true;

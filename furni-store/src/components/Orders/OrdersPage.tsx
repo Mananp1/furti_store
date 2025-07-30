@@ -37,7 +37,6 @@ export default function OrdersPage() {
   const { paymentHistory, isLoading, error } = useOrdersLogic();
   const search = useSearch({ from: "/orders" });
 
-  // Show success message if redirected from successful payment
   if (
     search &&
     typeof search === "object" &&
@@ -139,7 +138,6 @@ export default function OrdersPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {/* Order Items */}
                     <div>
                       <h4 className="font-medium mb-2">Items</h4>
                       <div className="space-y-2">
@@ -162,7 +160,6 @@ export default function OrdersPage() {
                       </div>
                     </div>
 
-                    {/* Shipping Address */}
                     {order.shippingAddress && (
                       <div>
                         <h4 className="font-medium mb-2 flex items-center gap-2">
@@ -181,7 +178,6 @@ export default function OrdersPage() {
                       </div>
                     )}
 
-                    {/* Payment Method */}
                     <div>
                       <h4 className="font-medium mb-2 flex items-center gap-2">
                         <CreditCard className="h-4 w-4" />
@@ -200,8 +196,7 @@ export default function OrdersPage() {
                         )}
                       </div>
                     </div>
-
-                    {/* Order Details */}
+                        
                     <div className="pt-4 border-t">
                       <div className="flex justify-between items-center text-sm">
                         <span>Subtotal</span>

@@ -16,7 +16,6 @@ export const CheckoutForm = ({
 }: CheckoutFormProps) => {
   return (
     <div className="space-y-6">
-      {/* Address Section */}
       <Card>
         <CardHeader>
           <CardTitle>Shipping Address</CardTitle>
@@ -24,7 +23,6 @@ export const CheckoutForm = ({
         <CardContent>{children}</CardContent>
       </Card>
 
-      {/* Payment Method Section */}
       <Card>
         <CardHeader>
           <CardTitle>Payment Method</CardTitle>

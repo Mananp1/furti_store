@@ -59,11 +59,9 @@ export const OrderSummary = ({
         <CardTitle>Order Summary</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Cart Items */}
         <div className="space-y-3">
           {cartItems.map((item) => (
             <div key={item._id} className="flex items-center gap-3">
-              {/* Product Image */}
               <div className="flex-shrink-0">
                 <img
                   src={item.images?.[0] || "/placeholder-image.jpg"}
@@ -79,7 +77,6 @@ export const OrderSummary = ({
                 </p>
               </div>
 
-              {/* Quantity Controls */}
               <div className="flex items-center gap-1">
                 <Button
                   variant="outline"
@@ -114,7 +111,6 @@ export const OrderSummary = ({
 
         <Separator />
 
-        {/* Delivery Options */}
         <div className="space-y-3">
           <h4 className="font-medium text-sm">Delivery Options</h4>
           <RadioGroup
@@ -171,7 +167,6 @@ export const OrderSummary = ({
 
         <Separator />
 
-        {/* Price Breakdown */}
         <div className="space-y-2">
           <div className="flex justify-between">
             <span>Subtotal</span>
@@ -192,12 +187,10 @@ export const OrderSummary = ({
           </div>
         </div>
 
-        {/* Continue Shopping Button */}
         <Button variant="outline" className="w-full" asChild>
           <Link to="/products">Continue Shopping</Link>
         </Button>
 
-        {/* Place Order Button */}
         <Button
           onClick={onPlaceOrder}
           disabled={isProcessing || isProfileIncomplete}

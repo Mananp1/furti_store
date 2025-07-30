@@ -34,7 +34,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState, useEffect } from "react";
 
-// Validation schema for profile form
 const profileFormSchema = z.object({
   firstName: z
     .string()
@@ -69,7 +68,6 @@ export const AccountTab = ({
 }: AccountTabProps) => {
   const [isEditing, setIsEditing] = useState(false);
 
-  // Form setup
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
@@ -78,7 +76,6 @@ export const AccountTab = ({
     },
   });
 
-  // Update form values when profile changes
   useEffect(() => {
     if (profile) {
       form.reset({
@@ -142,7 +139,6 @@ export const AccountTab = ({
               </Button>
             </div>
 
-            {/* Edit Profile Form */}
             {isEditing && (
               <div className="p-4 border rounded-lg bg-muted/30">
                 <Form {...form}>
@@ -195,7 +191,6 @@ export const AccountTab = ({
               </div>
             )}
 
-            {/* Display current profile info */}
             {profile && !isEditing && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-muted/50 rounded-lg">
                 <div>
@@ -230,8 +225,7 @@ export const AccountTab = ({
           </div>
         </CardContent>
       </Card>
-
-      {/* Danger Zone */}
+            
       <Card className="border-destructive/20">
         <CardHeader className="pb-4 sm:pb-6">
           <CardTitle className="text-destructive text-lg sm:text-xl">

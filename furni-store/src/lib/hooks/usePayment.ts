@@ -10,7 +10,6 @@ import {
 import { clearCartAPI } from "@/features/cart/cartSlice";
 import type { PaymentData } from "@/features/payment/paymentSlice";
 
-// Initialize Stripe (you'll need to add your publishable key to .env)
 const stripePromise = loadStripe(
   import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY 
 );
@@ -22,18 +21,15 @@ export const usePayment = () => {
     (state) => state.paymentState
   );
 
-  // Handle Stripe payment
   const handleStripePayment = async (paymentData: PaymentData) => {
     try {
       console.log("💰 Creating Stripe payment intent...");
       console.log("📦 Payment data for Stripe:", paymentData);
 
-      // Create payment intent using Redux
       const result = await dispatch(createStripePayment(paymentData)).unwrap();
 
       console.log("✅ Payment intent created:", result);
 
-      // Load Stripe and redirect to payment
       const stripe = await stripePromise;
       if (!stripe) {
         throw new Error("Failed to load Stripe");
@@ -41,7 +37,6 @@ export const usePayment = () => {
 
       console.log("🎯 Redirecting to Stripe checkout...");
 
-      // Redirect to Stripe Checkout using session ID
       const { error } = await stripe.redirectToCheckout({
         sessionId: result.sessionId,
       });
@@ -65,24 +60,20 @@ export const usePayment = () => {
     }
   };
 
-  // Handle Cash on Delivery
   const handleCashOnDelivery = async (paymentData: PaymentData) => {
     try {
       console.log("💵 Creating Cash on Delivery order...");
       console.log("📦 Payment data for COD:", paymentData);
 
-      // Create COD order using Redux
       const result = await dispatch(createCODOrder(paymentData)).unwrap();
 
       console.log("✅ COD order created:", result);
 
       toast.success(`Order placed successfully! Order ID: ${result.orderId}`);
 
-      // Clear cart after successful order
       await dispatch(clearCartAPI()).unwrap();
       console.log("🛒 Cart cleared after successful order");
 
-      // Navigate to orders page
       navigate({ to: "/orders" });
 
       return result;
@@ -98,7 +89,6 @@ export const usePayment = () => {
     }
   };
 
-  // Handle payment confirmation
   const handlePaymentConfirmation = async (
     _paymentIntentId: string,
     orderId: string
@@ -106,7 +96,6 @@ export const usePayment = () => {
     try {
       console.log("✅ Confirming payment...");
 
-      // Update payment status in Redux
       dispatch(updatePaymentStatus({ orderId, status: "completed" }));
 
       console.log("✅ Payment confirmed");
@@ -120,7 +109,7 @@ export const usePayment = () => {
     }
   };
 
-  // Process payment based on method
+  
   const processPayment = async (
     paymentMethod: string,
     paymentData: PaymentData

@@ -36,7 +36,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Vendor chunks
           vendor: ["react", "react-dom"],
           router: ["@tanstack/react-router"],
           ui: [
@@ -47,19 +46,14 @@ export default defineConfig({
           ],
           icons: ["lucide-react"],
           utils: ["clsx", "tailwind-merge", "class-variance-authority"],
-          // State management
           redux: ["@reduxjs/toolkit", "react-redux"],
-          // Data fetching
           query: ["@tanstack/react-query"],
-          // Forms
           forms: ["react-hook-form", "@hookform/resolvers", "zod"],
-          // UI components
           shadcn: [
             "@/components/ui/button",
             "@/components/ui/card",
             "@/components/ui/input",
           ],
-          // Features
           cart: ["@/features/cart/cartSlice"],
           user: ["@/features/user/userSlice"],
           wishlist: ["@/features/wishlist/wishlistSlice"],
@@ -67,7 +61,6 @@ export default defineConfig({
       },
     },
   },
-  // Optimize dependencies
   optimizeDeps: {
     include: [
       "react",
